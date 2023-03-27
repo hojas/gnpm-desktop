@@ -1,67 +1,83 @@
 import { Command } from '@tauri-apps/api/shell'
 import { message } from 'antd'
+import { cat } from 'shelljs'
 
-export function getNodeVersion(cb: Function) {
+// 获取 Node.js 版本
+export async function getNodeVersion() {
   const command = new Command('node', ['--version'])
-  command
-    .execute()
-    .then(data => cb(data.stdout))
-    .catch(err => console.error('error', err))
+
+  try {
+    const res = await command.execute()
+    return res.stdout
+  } catch (err: any) {
+    message.error(err)
+    return ''
+  }
 }
 
-export function getNpmVersion(cb: Function) {
-  const npmCommand = new Command('npm-version', ['-g', '--version'])
-  npmCommand
-    .execute()
-    .then(data => cb(data.stdout))
-    .catch(err => console.error('error', err))
+// 获取 npm 版本
+export async function getNpmVersion() {
+  const command = new Command('npm-version', ['-g', '--version'])
+
+  try {
+    const res = await command.execute()
+    return res.stdout
+  } catch (err: any) {
+    message.error(err)
+    return ''
+  }
 }
 
-export function getPackageList(cb: Function) {
-  const npmListCommand = new Command('npm-list', ['-g', 'list'])
+// 列出已安装 npm 包
+export async function getPackageList() {
+  const command = new Command('npm-list', ['-g', 'list'])
 
-  npmListCommand
-    .execute()
-    .then(data => cb(data.stdout))
-    .catch(err => console.error('error', err))
+  try {
+    const res = await command.execute()
+    return res.stdout
+  } catch (err: any) {
+    message.error(err)
+    return ''
+  }
 }
 
-function install(type: 'Install' | 'Upgrade', name: string, cb: Function) {
-  const npmListCommand = new Command('npm', ['-g', 'install', name])
-
+// 安装 or 更新 npm 包
+async function install(type: 'install' | 'upgrade', name: string) {
   message.success(`${type} ${name}...`)
 
-  npmListCommand
-    .execute()
-    .then(data => cb(name, data.stdout))
-    .catch(err => console.error('error', 'install', name, err))
+  const command = new Command('npm', ['-g', 'install', name])
+  try {
+    await command.execute()
+    message.success(`${name} ${type}${type === 'install' ? 'ed' : 'd'}`)
+    return true
+  } catch (err: any) {
+    message.error(err)
+    return false
+  }
 }
 
-export function installPackage(name: string, cb: Function) {
-  install('Install', name, (name: string, stdout: string) => {
-    message.success(`${name} installed`)
-    cb(stdout)
-  })
+// 安装 npm 包
+export function installPackage(name: string) {
+  return install('install', name)
 }
 
-export function upgradePackage(name: string, cb: Function) {
-  console.log(name)
-  install('Upgrade', name, (name: string, stdout: string) => {
-    message.success(`${name} upgraded`)
-    cb(stdout)
-  })
+// 更新 npm 包
+export function upgradePackage(name: string) {
+  return install('upgrade', name)
 }
 
-export function removePackage(name: string, cb: Function) {
-  const npmListCommand = new Command('npm', ['-g', 'remove', name])
+// 删除 npm 包
+export async function removePackage(name: string) {
+  const command = new Command('npm', ['-g', 'remove', name])
 
-  npmListCommand
-    .execute()
-    .then(data => {
-      message.success(`${name} removed`)
-      cb(data.stdout)
-    })
-    .catch(err => console.error('error', 'remove', name, err))
+  try {
+    await command.execute()
+    message.success(`${name} removed`)
+    return true
+  } catch (err: any) {
+    message.error(err)
+    return false
+  }
 }
 
 export function parsePackageList(str: string) {

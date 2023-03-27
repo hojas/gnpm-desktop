@@ -1,30 +1,13 @@
 import { Space, Button, Table } from 'antd'
-import { upgradePackage, removePackage, parsePackageList } from '../utils/command'
+import {
+  upgradePackage,
+  removePackage,
+  parsePackageList,
+} from '../utils/command'
 
 interface Package {
   name: string
   version: string
-}
-
-interface BtnProps {
-  name: string
-  cb: Function
-}
-
-function UpgradeBtn({ name, cb }: BtnProps) {
-  return (
-    <Button type="primary" onClick={() => upgradePackage(name, cb)}>
-      Upgrade
-    </Button>
-  )
-}
-
-function RemoveBtn({ name, cb }: BtnProps) {
-  return (
-    <Button type="primary" danger onClick={() => removePackage(name, cb)}>
-      Remove
-    </Button>
-  )
 }
 
 export function PackageList({
@@ -34,6 +17,16 @@ export function PackageList({
   packageStr: string
   onUpdatePackageList: Function
 }) {
+  const onInstall = async (name: string) => {
+    const success = await upgradePackage(name)
+    success && onUpdatePackageList()
+  }
+
+  const onRemove = async (name: string) => {
+    const success = await removePackage(name)
+    success && onUpdatePackageList()
+  }
+
   const columns = [
     {
       title: '名称',
@@ -53,11 +46,17 @@ export function PackageList({
       width: 120,
       render: (_: any, record: Package) => {
         return ['npm', 'corepack'].includes(record.name) ? (
-          <UpgradeBtn name={record.name} cb={onUpdatePackageList} />
+          <Button type="primary" onClick={() => onInstall(record.name)}>
+            Upgrade
+          </Button>
         ) : (
           <Space>
-            <UpgradeBtn name={record.name} cb={onUpdatePackageList} />
-            <RemoveBtn name={record.name} cb={onUpdatePackageList} />
+            <Button type="primary" onClick={() => onInstall(record.name)}>
+              Upgrade
+            </Button>
+            <Button type="primary" danger onClick={() => onRemove(record.name)}>
+              Remove
+            </Button>
           </Space>
         )
       },
@@ -67,6 +66,11 @@ export function PackageList({
   const packageList = parsePackageList(packageStr)
 
   return (
-    <Table className="mt-4" dataSource={packageList} columns={columns} bordered />
+    <Table
+      className="mt-4"
+      dataSource={packageList}
+      columns={columns}
+      bordered
+    />
   )
 }

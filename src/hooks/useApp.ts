@@ -3,15 +3,17 @@ import { getNodeVersion, getNpmVersion, getPackageList } from '../utils/command'
 
 export const useApp = () => {
   const [nodeVersion, setNodeVersion] = useState('')
-  getNodeVersion((version: string) => setNodeVersion(version))
+  getNodeVersion().then(version => setNodeVersion(version))
 
   const [npmVersion, setNpmVersion] = useState('')
-  getNpmVersion((version: string) => setNpmVersion(version))
+  getNpmVersion().then(version => setNpmVersion(version))
 
   const [packageStr, setPackageStr] = useState('')
 
-  function updatePackageList() {
-    getPackageList((str: string) => setPackageStr(str))
+  async function updatePackageList() {
+    const data = await getPackageList()
+    setPackageStr(data)
+    return data
   }
 
   return {

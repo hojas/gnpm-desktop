@@ -9,9 +9,9 @@ export default function Header({
   npmVersion: string
   updatePackageList: Function
 }) {
-  function onRefresh() {
-    updatePackageList()
-    return message.success('Package list updated')
+  async function onRefresh() {
+    const data = await updatePackageList()
+    data && message.success('Package list updated')
   }
 
   return (

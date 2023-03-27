@@ -8,7 +8,9 @@ import { useApp } from './hooks/useApp'
 export default function App() {
   const { nodeVersion, npmVersion, packageStr, updatePackageList } = useApp()
 
-  useEffect(() => updatePackageList(), [])
+  useEffect(() => {
+    updatePackageList()
+  }, [])
 
   return (
     <BaseLayout
