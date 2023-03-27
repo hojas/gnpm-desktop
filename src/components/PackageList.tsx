@@ -29,20 +29,20 @@ export function PackageList({
 
   const columns = [
     {
-      title: '名称',
+      title: 'Name',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: '版本',
+      title: 'Version',
       dataIndex: 'version',
       key: 'version',
       width: 120,
     },
     {
-      title: '操作',
-      dataIndex: 'action',
-      key: 'action',
+      title: 'Actions',
+      dataIndex: 'actions',
+      key: 'actions',
       width: 120,
       render: (_: any, record: Package) => {
         return ['npm', 'corepack'].includes(record.name) ? (
