@@ -1,16 +1,17 @@
 import { Space, Button, Table } from 'antd'
+import { UploadOutlined, DeleteOutlined } from '@ant-design/icons'
 import {
   upgradePackage,
   removePackage,
   parsePackageList,
-} from '../utils/command'
+} from '../../utils/command'
 
 interface Package {
   name: string
   version: string
 }
 
-export function PackageList({
+export function Packages({
   packageStr,
   onUpdatePackageList,
 }: {
@@ -47,14 +48,17 @@ export function PackageList({
       render: (_: any, record: Package) => {
         return ['npm', 'corepack'].includes(record.name) ? (
           <Button type="primary" onClick={() => onInstall(record.name)}>
+            <UploadOutlined />
             Upgrade
           </Button>
         ) : (
           <Space>
             <Button type="primary" onClick={() => onInstall(record.name)}>
+              <UploadOutlined />
               Upgrade
             </Button>
             <Button type="primary" danger onClick={() => onRemove(record.name)}>
+              <DeleteOutlined />
               Remove
             </Button>
           </Space>

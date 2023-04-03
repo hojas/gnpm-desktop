@@ -4,7 +4,7 @@
     "beforeBuildCommand": "pnpm build",
     "devPath": "http://localhost:1420",
     "distDir": "../dist",
-    "withGlobalTauri": false
+    "withGlobalTauri": true
   },
   "package": {
     "productName": "gnpm-desktop",
@@ -31,21 +31,15 @@
           {
             "name": "npm-version",
             "cmd": "npm",
-            "args": [
-              "-g",
-              "--version"
-            ]
+            "args": ["-g", "--version"]
           },
           {
             "name": "npm-list",
             "cmd": "npm",
-            "args": [
-              "-g",
-              "list"
-            ]
+            "args": ["-g", "list"]
           },
           {
-            "name": "npm",
+            "name": "npm-global",
             "cmd": "npm",
             "args": [
               "-g",
@@ -58,6 +52,11 @@
             ]
           }
         ]
+      },
+      "http": {
+        "all": true,
+        "request": true,
+        "scope": ["https://registry.npmjs.com/*"]
       }
     },
     "bundle": {
@@ -82,9 +81,9 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "gnpm-desktop",
-        "width": 800,
-        "height": 600
+        "title": "gnpm",
+        "width": 1000,
+        "height": 800
       }
     ]
   }

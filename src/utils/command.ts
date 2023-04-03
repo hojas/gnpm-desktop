@@ -45,7 +45,7 @@ export async function getPackageList() {
 async function install(type: 'install' | 'upgrade', name: string) {
   message.success(`${type} ${name}...`)
 
-  const command = new Command('npm', ['-g', 'install', name])
+  const command = new Command('npm-global', ['-g', 'install', name])
   try {
     await command.execute()
     message.success(`${name} ${type}${type === 'install' ? 'ed' : 'd'}`)
@@ -68,7 +68,7 @@ export function upgradePackage(name: string) {
 
 // 删除 npm 包
 export async function removePackage(name: string) {
-  const command = new Command('npm', ['-g', 'remove', name])
+  const command = new Command('npm-global', ['-g', 'remove', name])
 
   try {
     await command.execute()
